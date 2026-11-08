@@ -30,7 +30,7 @@ inputs:
     default: ""
 outputs:
   susfs_commit:
-    description: 'Resolved SUSFS commit actually used (latest tip for the next flavor, the pin otherwise)'
+    description: 'Resolved SUSFS commit actually used'
     value: ${{ steps.resolve.outputs.commit }}
 
 runs:
@@ -42,11 +42,11 @@ runs:
       shell: bash
       run: |
         set -euo pipefail
-        # KernelSU-Next (next) always uses the latest susfs4ksu gki branch tip so
-        # SUSFS stays API-matched to the always-latest KernelSU-Next tree. All
-        # other roots (kernelsu, bakasu, finasu, sukisu-ultra) use the pinned
-        # verified SUSFS commit.
-        if [ "${{ inputs.root_flavor }}" = "next" ]; then
+        if [ "${{ inputs.root_flavor }}" = "next" ] && [ "${{ inputs.version }}" = "android14-6.1" ]; then
+          # Match the Release 22 KernelSU-Next base used by the PR3936 backport.
+          SUSFS_COMMIT="8b25990241174fe88d2131a9929e36b5e5ffb1d0"
+          echo "KernelSU-Next backport: using Release 22 SUSFS commit: ${SUSFS_COMMIT}"
+        elif [ "${{ inputs.root_flavor }}" = "next" ]; then
           BRANCH="gki-${{ inputs.android_version }}-${{ inputs.kernel_version }}"
           SUSFS_COMMIT="$(git ls-remote https://gitlab.com/simonpunk/susfs4ksu.git "refs/heads/${BRANCH}" | cut -f1)"
           echo "KernelSU-Next: resolving SUSFS at latest on ${BRANCH} -> ${SUSFS_COMMIT}"
