@@ -365,7 +365,7 @@ jobs:
           KOWSU_COMMIT="$(resolve_sha https://github.com/KOWX712/KernelSU.git refs/heads/master)"
           emit kowsu_commit "$KOWSU_COMMIT"
           if [ "$SCHED_SUSFS" = "true" ]; then
-            NEXT_COMMIT="$(resolve_sha https://github.com/pershoot/KernelSU-Next.git refs/heads/dev-susfs)"
+            NEXT_COMMIT="d21e0a66c887ae4bc75b7c9f83e41761819ec09a"
           else
             NEXT_COMMIT="$(resolve_sha https://github.com/KernelSU-Next/KernelSU-Next.git refs/heads/dev)"
           fi
@@ -457,9 +457,9 @@ jobs:
           done
 
           # Tracked build helpers (resolved automatically, before the run)
-          emit kernel_patches_commit "$(resolve_sha https://github.com/WildKernels/kernel_patches.git refs/heads/main)"
+          emit kernel_patches_commit "c78291aeb0dca025f21e6b197e0aa4fde42e065d"
           emit anykernel3_commit   "$(resolve_sha https://github.com/WildKernels/AnyKernel3.git refs/heads/gki-2.0)"
-          emit droidspaces_commit  "$(resolve_sha https://github.com/ravindu644/Droidspaces-OSS.git refs/heads/main)"
+          emit droidspaces_commit "4344dc5fc4ab981f1cf2df54c93bf32a6ebbdc85"
 
           echo "Resolved:"
           env | grep -E '^(nomount_commit|kernelsu_commit|kernelsu_branch|root_commit|susfs_commit_|kernel_patches_commit|anykernel3_commit|droidspaces_commit)' | sort || true

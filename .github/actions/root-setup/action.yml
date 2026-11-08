@@ -26,7 +26,7 @@ runs:
             manager="KernelSU Manager"
             ;;
           next)
-            repo="https://github.com/KernelSU-Next/KernelSU-Next.git"
+            repo="https://github.com/pershoot/KernelSU-Next.git"
             directory="KernelSU-Next"
             manager="KernelSU Next Manager"
             ;;
@@ -93,6 +93,18 @@ runs:
         if [ "$actual_commit" != "$expected_commit" ]; then
           echo "Root commit mismatch: expected $expected_commit, got $actual_commit." >&2
           exit 1
+        fi
+        if [ "$flavor" = "next" ]; then
+          if [ "$actual_commit" != "d21e0a66c887ae4bc75b7c9f83e41761819ec09a" ]; then
+            echo "Unexpected KernelSU-Next base for PR3936: $actual_commit" >&2
+            exit 1
+          fi
+          patch_file="$GITHUB_WORKSPACE/.github/KernelSU-Next-r22-PR3936.diff"
+          git -C "$directory" apply --check "$patch_file"
+          git -C "$directory" apply "$patch_file"
+          git -C "$directory" diff --check
+          git -C "$directory" diff --stat
+          echo "Applied PR3936 (af9ea1ec) to KernelSU-Next $actual_commit"
         fi
         if [ ! -f "$directory/kernel/Kconfig" ] || [ ! -f "$directory/kernel/Makefile" ]; then
           echo "Selected root checkout does not contain a kernel integration." >&2
